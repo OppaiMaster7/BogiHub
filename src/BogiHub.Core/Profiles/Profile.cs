@@ -16,6 +16,12 @@ public enum PadMode { None, Mouse, Directional, LeftStick, RightStick, Scroll }
 
 public enum GyroMode { Off, Mouse, RightStick }
 
+/// <summary>
+/// Which rotation turns left and right. PlayerSpace follows the real world's up axis however the controller is held;
+/// Yaw spins it flat like a steering wheel lying down; Roll tilts it like a steering wheel.
+/// </summary>
+public enum GyroTurnAxis { PlayerSpace, Yaw, Roll }
+
 public sealed class StickConfig
 {
     public StickMode Mode { get; set; } = StickMode.None;
@@ -67,6 +73,8 @@ public sealed class TrackpadConfig
     public Binding Down { get; set; } = Binding.None;
     public Binding Left { get; set; } = Binding.None;
     public Binding Right { get; set; } = Binding.None;
+    /// <summary>Little ticks under the thumb as the cursor rolls or the wheel notches, a click on a new direction.</summary>
+    public bool Haptics { get; set; } = true;
 }
 
 public sealed class GyroConfig
@@ -77,6 +85,15 @@ public sealed class GyroConfig
     public bool InvertY { get; set; }
     /// <summary>When set, gyro only acts while this control is held or touched (e.g. right grip touch).</summary>
     public PhysicalInput? EnableWhile { get; set; }
+    /// <summary>When set, gyro pauses while this control is held or touched (e.g. lift the thumb off the stick to re-centre).</summary>
+    public PhysicalInput? DisableWhile { get; set; }
+    public GyroTurnAxis TurnAxis { get; set; } = GyroTurnAxis.PlayerSpace;
+    /// <summary>Up and down speed relative to left and right.</summary>
+    public float VerticalScale { get; set; } = 1.0f;
+    /// <summary>0..1: calms hand shake at very low speeds; never delays real movement.</summary>
+    public float Smoothing { get; set; } = 0.25f;
+    /// <summary>0..0.9: how much slower slow movements are, for fine aim. 0 = the same speed everywhere.</summary>
+    public float Precision { get; set; }
 }
 
 /// <summary>A complete, data-only layout. Saved as versioned JSON; never contains executable scripts.</summary>

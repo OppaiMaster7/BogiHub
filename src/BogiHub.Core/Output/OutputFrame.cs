@@ -71,8 +71,14 @@ public sealed class OutputFrame
     public bool UsesGamepad;
     public bool UsesKeyboardMouse;
 
+    /// <summary>Trackpad haptics this sample: small ticks (cursor rolled, wheel notched) and a click (new direction).</summary>
+    public int TicksLeft, TicksRight;
+    public bool ClickLeft, ClickRight;
+
     public void Clear()
     {
+        TicksLeft = TicksRight = 0;
+        ClickLeft = ClickRight = false;
         Pad = GamepadReport.Neutral;
         Array.Clear(Keys);
         Mouse = MouseButtons.None;

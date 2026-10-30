@@ -53,6 +53,11 @@ public static class ProfileValidator
 
         Range("gyro.sensitivity", p.Gyro.Sensitivity, 0.05f, 20f, errors);
         if (p.Gyro.EnableWhile is { } ew && !Enum.IsDefined(ew)) errors.Add("gyro.enableWhile is not a known control.");
+        if (p.Gyro.DisableWhile is { } dw && !Enum.IsDefined(dw)) errors.Add("gyro.disableWhile is not a known control.");
+        if (!Enum.IsDefined(p.Gyro.TurnAxis)) errors.Add("gyro.turnAxis is not a known axis.");
+        Range("gyro.verticalScale", p.Gyro.VerticalScale, 0.1f, 3f, errors);
+        Range("gyro.smoothing", p.Gyro.Smoothing, 0f, 1f, errors);
+        Range("gyro.precision", p.Gyro.Precision, 0f, 0.9f, errors);
 
         if (p.Output == OutputMode.KeyboardMouse && UsesGamepad(p))
             errors.Add("This keyboard & mouse profile binds Xbox controller outputs. Switch it to Gamepad or Hybrid, or rebind those controls.");

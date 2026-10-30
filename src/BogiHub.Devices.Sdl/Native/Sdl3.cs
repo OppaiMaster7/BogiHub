@@ -21,6 +21,8 @@ public static unsafe partial class Sdl3
     public const ushort VendorValve = 0x28DE;
     public const ushort ProductProteusDongle = 0x1304;
     public const ushort ProductNereidDongle = 0x1305;
+    /// <summary>The controller itself on a USB-C cable, and over Bluetooth (SDL's controller_list.h).</summary>
+    public const ushort ProductTritonUsb = 0x1302, ProductTritonBle = 0x1303;
 
     [LibraryImport(Lib)] public static partial int SDL_GetVersion();
     [LibraryImport(Lib)] public static partial IntPtr SDL_GetRevision();

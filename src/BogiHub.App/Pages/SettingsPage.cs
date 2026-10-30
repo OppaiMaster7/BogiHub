@@ -44,7 +44,10 @@ public sealed class SettingsPage : UserControl, IPage
             Ui.SettingRow("Pass game rumble to the controller", "Games that rumble an Xbox controller will vibrate the Steam Controller.",
                 Ui.Toggle(s.RumblePassthrough, v => Set(x => x.RumblePassthrough = v))),
             Ui.SettingRow("Strength", null, Ui.Slider(0, 1, s.RumbleStrength, v => $"{v * 100:0}%", v => Set(x => x.RumbleStrength = (float)v), 160)),
-            Ui.Row(8, Ui.Button("Test rumble", runtime.TestRumble))), "Rumble");
+            Ui.Row(8, Ui.Button("Test rumble", runtime.TestRumble)),
+            Ui.SettingRow("Trackpad haptics", "Small ticks under your thumb as the cursor rolls or the scroll wheel turns, and a click on each new direction. Each profile can turn them off per pad in Controls.",
+                Ui.Slider(0, 1, s.PadHapticStrength, v => v <= 0.001 ? "Off" : $"{v * 100:0}%", v => Set(x => x.PadHapticStrength = (float)v), 160)),
+            Ui.Row(8, Ui.Button("Feel trackpad haptics", runtime.TestPadHaptics))), "Rumble & haptics");
 
         var notices = Ui.Card(Ui.Stack(12,
             Ui.SettingRow("On-screen notifications", "Small notices that slide in over games too: who controls the controller, when Steam gets in the way, battery, connection and problems. Clicks pass straight through them.",
@@ -65,6 +68,8 @@ public sealed class SettingsPage : UserControl, IPage
             Ui.SettingRow("Start with Windows", "Off by default. Starts minimised to the tray.",
                 Ui.Toggle(SafeAutostart(), v => { try { Autostart.Set(v, Environment.ProcessPath!); } catch (Exception ex) { _note.Text = ex.Message; } })),
             Ui.SettingRow("Start minimised", null, Ui.Toggle(s.StartMinimized, v => Set(x => x.StartMinimized = v))),
+            Ui.SettingRow("Battery on the tray icon", "A level bar on BogiHub's tray icon shows the controller's charge: amber at 20 %, red at 10 %. Hover it for the exact number.",
+                Ui.Toggle(s.TrayBattery, v => Set(x => x.TrayBattery = v))),
             Ui.SettingRow("Closing the window keeps BogiHub in the tray", "Mapping keeps working with the window closed. Exit from the tray menu.",
                 Ui.Toggle(s.CloseToTray, v => Set(x => x.CloseToTray = v))),
             _hotkey), "Startup & tray");

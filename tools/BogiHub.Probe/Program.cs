@@ -62,6 +62,7 @@ internal static unsafe partial class Program
         if (Environment.GetCommandLineArgs().Contains("--vigem")) return VigemCheck.Run();
         if (Environment.GetCommandLineArgs().Contains("--guard")) return GuardCheck.Run();
         if (Environment.GetCommandLineArgs().Contains("--passive")) return PassiveCheck.Run();
+        if (Environment.GetCommandLineArgs().Contains("--haptics")) return HapticsCheck.Run();
         if (Environment.GetCommandLineArgs().Contains("--sources"))
         {
             var a = Environment.GetCommandLineArgs();

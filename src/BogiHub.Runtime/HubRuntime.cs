@@ -461,6 +461,22 @@ public sealed class HubRuntime : IControllerSink, IDisposable
     }
 
     /// <summary>Settings → "Show an example": a notice built from the current state.</summary>
+    /// <summary>Settings → "Feel it": one click and a short run of ticks on each pad at the chosen strength.</summary>
+    public void TestPadHaptics()
+    {
+        float strength = Math.Max(Settings.PadHapticStrength, 0.05f);
+        foreach (bool left in new[] { true, false })
+        {
+            _controller.PadHaptic(left, click: true, strength);
+            for (int i = 0; i < 6; i++)
+            {
+                int delay = 250 + i * 60 + (left ? 0 : 700);
+                bool side = left;
+                _ = Task.Delay(delay).ContinueWith(_ => _controller.PadHaptic(side, click: false, strength));
+            }
+        }
+    }
+
     public void ShowTestNotice()
     {
         var s = GetStatus();
@@ -564,6 +580,13 @@ public sealed class HubRuntime : IControllerSink, IDisposable
 
             if (_frame.UsesKeyboardMouse) _kbm.Submit(_frame);
             else if (_kbm.IsHoldingAnything) _kbm.Neutralize();
+
+            float haptic = Settings.PadHapticStrength;
+            if (haptic > 0)
+            {
+                if (_frame.TicksLeft > 0 || _frame.ClickLeft) _controller.PadHaptic(left: true, _frame.ClickLeft, haptic);
+                if (_frame.TicksRight > 0 || _frame.ClickRight) _controller.PadHaptic(left: false, _frame.ClickRight, haptic);
+            }
         }
         _outputsWereActive = active;
 

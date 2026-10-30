@@ -133,6 +133,13 @@ public sealed unsafe partial class SdlControllerService : IDisposable
             _buzzNextStart = 0;
         });
 
+    /// <summary>
+    /// A trackpad haptic: a light tick (cursor rolling, wheel notch) or a firmer click (new direction).
+    /// <paramref name="strength"/> 0..1. Ticks closer than <see cref="TickSpacingMs"/> on one side merge into one.
+    /// </summary>
+    public void PadHaptic(bool left, bool click, float strength) =>
+        _commands.Enqueue(() => WritePadHaptic(left, click, strength));
+
     public void Dispose()
     {
         _stop = true;
@@ -166,12 +173,18 @@ public sealed unsafe partial class SdlControllerService : IDisposable
         long now = Environment.TickCount64;
         if (now - _lastSideAttempt < SideRetryMs) return;
         _lastSideAttempt = now;
-        foreach (uint id in GetJoystickIds())
-        {
-            if (SDL_GetJoystickVendorForID(id) != VendorValve || !SDL_IsGamepad(id)) continue;
+        foreach (uint id in ValveGamepads())
             if (OpenSideChannel(id)) return;
-        }
     }
+
+    /// <summary>
+    /// Valve gamepads, best link first: a USB-C cable, then Bluetooth, then the puck. A controller charging on a cable
+    /// while its puck is also plugged in may show up twice; the cable is the direct, lowest-latency path.
+    /// </summary>
+    private static IEnumerable<uint> ValveGamepads() =>
+        GetJoystickIds()
+            .Where(id => SDL_GetJoystickVendorForID(id) == VendorValve && SDL_IsGamepad(id))
+            .OrderBy(id => SDL_GetJoystickProductForID(id) switch { ProductTritonUsb => 0, ProductTritonBle => 1, _ => 2 });
 
     private bool OpenSideChannel(uint id)
     {
@@ -234,6 +247,34 @@ public sealed unsafe partial class SdlControllerService : IDisposable
         }
         if (_gamepad != IntPtr.Zero) SDL_RumbleGamepad(_gamepad, low, high, 60);
     }
+
+    // ---- Trackpad haptics ----------------------------------------------------------------------
+    // SDL 3.4.18's controller_structs.h: output report 82 = haptic command { side, command, gain dB },
+    // command 1 = tick, 2 = click. Side 0 = left pad, 1 = right pad (Steamworks' ESteamControllerPad order;
+    // check with `BogiHub.Probe --haptics`).
+
+    public const int TickSpacingMs = 14;
+    public const byte HapticSideLeft = 0, HapticSideRight = 1;
+    private long _lastTickLeft, _lastTickRight;
+
+    private void WritePadHaptic(bool left, bool click, float strength)
+    {
+        if (_hid == IntPtr.Zero || strength <= 0) return;
+        long now = Environment.TickCount64;
+        ref long last = ref left ? ref _lastTickLeft : ref _lastTickRight;
+        if (!click && now - last < TickSpacingMs) return;
+        last = now;
+        byte* r = stackalloc byte[4];
+        r[0] = 0x82;
+        r[1] = left ? HapticSideLeft : HapticSideRight;
+        r[2] = click ? (byte)2 : (byte)1;
+        r[3] = (byte)GainDb(strength);
+        SDL_hid_write(_hid, r, 4);
+    }
+
+    /// <summary>0..1 strength as the firmware's gain in dB: 100 % = 0 dB, 50 % ≈ -6 dB, quietest -30 dB.</summary>
+    public static sbyte GainDb(float strength) =>
+        (sbyte)Math.Clamp(MathF.Round(20f * MathF.Log10(Math.Max(strength, 0.03f))), -30f, 0f);
 
     // ---- Haptic patterns ---------------------------------------------------------------------------
     // The controller stops rumbling ~50 ms after the last command, so an "on" segment is refreshed every 35 ms.
@@ -434,9 +475,8 @@ public sealed unsafe partial class SdlControllerService : IDisposable
     private void TryOpen()
     {
         _lastOpenAttempt = Environment.TickCount64;
-        foreach (uint id in GetJoystickIds())
+        foreach (uint id in ValveGamepads())
         {
-            if (SDL_GetJoystickVendorForID(id) != VendorValve || !SDL_IsGamepad(id)) continue;
             IntPtr gp = SDL_OpenGamepad(id);
             if (gp == IntPtr.Zero)
             {
@@ -482,6 +522,9 @@ public sealed unsafe partial class SdlControllerService : IDisposable
     {
         // SDL reports the puck's USB link as "wired"; the controller itself is wireless.
         ProductProteusDongle or ProductNereidDongle => "Wireless (Puck)",
+        // Known by product id, so passive mode (no SDL connection state) names them too.
+        ProductTritonUsb => "USB cable",
+        ProductTritonBle => "Bluetooth",
         _ => state switch
         {
             ConnectionState.Wired => "USB cable",

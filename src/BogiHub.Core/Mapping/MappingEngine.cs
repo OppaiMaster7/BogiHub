@@ -18,7 +18,8 @@ public sealed class MappingEngine
     public const float PadScrollNotchesPerHeight = 12f;
     /// <summary>Pixels per radian of controller rotation at gyro sensitivity 1.</summary>
     public const float GyroPixelsPerRadian = 1000f;
-    private const float GyroNoiseFloor = 0.01f;
+    /// <summary>Trackpad haptics: one tick per this much travel, as a fraction of the pad's width (about 30 per swipe).</summary>
+    public const float HapticTickTravel = 0.035f;
     private const float DiagonalThreshold = 0.38f; // sin(22.5°): 8-way directions
 
     // Source ids for edge detection of wheel bindings.
@@ -33,6 +34,7 @@ public sealed class MappingEngine
     private bool _padNow, _kbmNow; // effective for the current sample (Gamepad mode can override)
 
     private PadMotion _leftPad, _rightPad;
+    private readonly GyroProcessor _gyro = new();
     private ulong _wheelSourcesHeld, _wheelSourcesNow;
 
     // Analog accumulators for the current sample.
@@ -84,8 +86,8 @@ public sealed class MappingEngine
         Stick(SrcRightStick, s.RightStick, _profile.RightStick, dt, f);
         Trigger(SrcTriggerL, s.LeftTrigger, _profile.LeftTrigger, f);
         Trigger(SrcTriggerR, s.RightTrigger, _profile.RightTrigger, f);
-        Pad(SrcLeftPad, s.LeftPad, s.IsPressed(PhysicalInput.LeftPadClick), _profile.LeftPad, ref _leftPad, dt, f);
-        Pad(SrcRightPad, s.RightPad, s.IsPressed(PhysicalInput.RightPadClick), _profile.RightPad, ref _rightPad, dt, f);
+        Pad(SrcLeftPad, s.LeftPad, s.IsPressed(PhysicalInput.LeftPadClick), _profile.LeftPad, ref _leftPad, dt, f, left: true);
+        Pad(SrcRightPad, s.RightPad, s.IsPressed(PhysicalInput.RightPadClick), _profile.RightPad, ref _rightPad, dt, f, left: false);
         Gyro(in s, dt, f);
 
         _wheelSourcesHeld = _wheelSourcesNow;
@@ -112,7 +114,11 @@ public sealed class MappingEngine
         _usesKbm = p.Output != OutputMode.Gamepad || UsesKeyboardMouse(p);
         _leftPad = _rightPad = default;
         _wheelSourcesHeld = 0;
+        _gyro.Reset();
     }
+
+    /// <summary>The gyro's learned drift correction, for diagnostics. Input thread only.</summary>
+    public GyroProcessor GyroState => _gyro;
 
     private static bool UsesKeyboardMouse(Profile p) =>
         p.Buttons.Values.Any(b => b.Kind is BindingKind.Key or BindingKind.Mouse) ||
@@ -197,9 +203,12 @@ public sealed class MappingEngine
         }
     }
 
-    private void Pad(int src, TouchPoint t, bool clicked, TrackpadConfig c, ref PadMotion m, float dt, OutputFrame f)
+    private void Pad(int src, TouchPoint t, bool clicked, TrackpadConfig c, ref PadMotion m, float dt, OutputFrame f, bool left)
     {
         var pos = new Vector2(t.X, t.Y);
+        float mouseBefore = MathF.Abs(f.MouseDx) + MathF.Abs(f.MouseDy);
+        int wheelBefore = f.WheelNotches;
+        int dirs = 0;
         switch (c.Mode)
         {
             case PadMode.Mouse:
@@ -249,7 +258,13 @@ public sealed class MappingEngine
                 if (t.Touching && (clicked || !c.RequireClick))
                 {
                     var v = t.Centered;
-                    if (v.Length() > c.Deadzone) Directions(src, Vector2.Normalize(v), DiagonalThreshold, c.Up, c.Down, c.Left, c.Right, f);
+                    if (v.Length() > c.Deadzone)
+                    {
+                        var d = Vector2.Normalize(v);
+                        Directions(src, d, DiagonalThreshold, c.Up, c.Down, c.Left, c.Right, f);
+                        dirs = (d.Y > DiagonalThreshold ? 1 : 0) | (d.Y < -DiagonalThreshold ? 2 : 0) |
+                               (d.X < -DiagonalThreshold ? 4 : 0) | (d.X > DiagonalThreshold ? 8 : 0);
+                    }
                 }
                 break;
 
@@ -264,29 +279,59 @@ public sealed class MappingEngine
 
         m.WasTouching = t.Touching;
         if (t.Touching) m.Last = pos;
+        if (c.Haptics) PadHaptics(c, ref m, f, left, mouseBefore, wheelBefore, dirs);
+    }
+
+    /// <summary>
+    /// Ticks follow what the pad did this sample: cursor travel (finger or trackball glide, measured back in pad widths
+    /// so the feel doesn't change with sensitivity), each wheel notch, and a click when a new direction comes in.
+    /// </summary>
+    private static void PadHaptics(TrackpadConfig c, ref PadMotion m, OutputFrame f, bool left, float mouseBefore, int wheelBefore, int dirs)
+    {
+        int ticks = 0;
+        bool click = false;
+        if (c.Mode == PadMode.Mouse)
+        {
+            float pixels = MathF.Abs(f.MouseDx) + MathF.Abs(f.MouseDy) - mouseBefore;
+            m.Travel += Math.Max(pixels, 0f) / (PadMousePixelsPerWidth * Math.Max(c.Sensitivity, 0.1f));
+            ticks = (int)(m.Travel / HapticTickTravel);
+            m.Travel -= ticks * HapticTickTravel;
+        }
+        else if (c.Mode == PadMode.Scroll)
+        {
+            ticks = Math.Abs(f.WheelNotches - wheelBefore);
+        }
+        else if (c.Mode == PadMode.Directional)
+        {
+            click = dirs != 0 && dirs != m.Directions;
+            m.Directions = dirs;
+        }
+        if (left) { f.TicksLeft += ticks; f.ClickLeft |= click; }
+        else { f.TicksRight += ticks; f.ClickRight |= click; }
     }
 
     private void Gyro(in ControllerState s, float dt, OutputFrame f)
     {
+        if (!s.MotionValid) return;
+        _gyro.Observe(s.Gyro, s.Accel, dt); // drift and gravity are learned even while aiming is off
         var g = _profile.Gyro;
-        if (g.Mode == GyroMode.Off || !s.MotionValid) return;
-        if (g.EnableWhile is { } hold && !s.IsPressed(hold)) return;
+        if (g.Mode == GyroMode.Off) return;
+        if ((g.EnableWhile is { } on && !s.IsPressed(on)) || (g.DisableWhile is { } off && s.IsPressed(off)))
+        {
+            _gyro.Idle();
+            return;
+        }
 
-        // SDL gyro axes: X = pitch (nose up positive), Y = yaw (turn left positive).
-        float yaw = Math.Abs(s.Gyro.Y) < GyroNoiseFloor ? 0 : s.Gyro.Y;
-        float pitch = Math.Abs(s.Gyro.X) < GyroNoiseFloor ? 0 : s.Gyro.X;
-        float x = -yaw * (g.InvertX ? -1 : 1);
-        float y = pitch * (g.InvertY ? -1 : 1);
-
+        var aim = _gyro.Aim(s.Gyro, g, dt);
         switch (g.Mode)
         {
             case GyroMode.Mouse:
-                f.MouseDx += x * GyroPixelsPerRadian * g.Sensitivity * dt;
-                f.MouseDy -= y * GyroPixelsPerRadian * g.Sensitivity * dt;
+                f.MouseDx += aim.X * GyroPixelsPerRadian * g.Sensitivity * dt;
+                f.MouseDy -= aim.Y * GyroPixelsPerRadian * g.Sensitivity * dt;
                 break;
             case GyroMode.RightStick:
                 // About 2 rad/s of turning maps to a full stick deflection at sensitivity 1.
-                _outRight += new Vector2(x, y) * 0.5f * g.Sensitivity;
+                _outRight += aim * 0.5f * g.Sensitivity;
                 break;
         }
     }
@@ -329,5 +374,7 @@ public sealed class MappingEngine
         public Vector2 Smoothed;
         public Vector2 Velocity;
         public float ScrollRemainder;
+        public float Travel;
+        public int Directions;
     }
 }

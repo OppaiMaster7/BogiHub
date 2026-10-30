@@ -28,10 +28,14 @@ public sealed class AppSettings
     /// <summary>Holding the "…" (Quick Access) button for 1.5 s switches between gamepad and mouse &amp; keyboard.</summary>
     public bool HoldQamForGamepad { get; set; } = true;
     public bool RumblePassthrough { get; set; } = true;
+    /// <summary>0..1 strength of trackpad ticks and clicks (each profile turns them on or off per pad). 0 = off.</summary>
+    public float PadHapticStrength { get; set; } = 0.6f;
     /// <summary>0..1 multiplier applied to game rumble.</summary>
     public float RumbleStrength { get; set; } = 1.0f;
     public bool StartMinimized { get; set; }
     public bool CloseToTray { get; set; } = true;
+    /// <summary>Show the controller's charge on the tray icon (a level bar) and in its tooltip.</summary>
+    public bool TrayBattery { get; set; } = true;
     /// <summary>Visual: faint colour in the moving background behind the glass (false = greyscale).</summary>
     public bool AmbientColor { get; set; } = true;
     /// <summary>On-screen notices (over games too): who controls the controller, Steam, battery, problems.</summary>
@@ -54,6 +58,7 @@ public sealed class AppSettings
                 .Replace("\"switch\": \"Gamepad\"", "\"switch\": \"Manual\"");
             var s = JsonSerializer.Deserialize<AppSettings>(json, ProfileJson.Options) ?? new AppSettings();
             s.RumbleStrength = Math.Clamp(float.IsNaN(s.RumbleStrength) ? 1f : s.RumbleStrength, 0f, 1f);
+            s.PadHapticStrength = Math.Clamp(float.IsNaN(s.PadHapticStrength) ? 0.6f : s.PadHapticStrength, 0f, 1f);
             if (!Enum.IsDefined(s.Switch)) s.Switch = ControlSwitch.Auto;
             if (!Enum.IsDefined(s.ManualMode)) s.ManualMode = ManualMode.Gamepad;
             if (!Enum.IsDefined(s.NotificationPosition)) s.NotificationPosition = NoticePosition.TopCenter;

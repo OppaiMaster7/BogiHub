@@ -6,6 +6,7 @@ using Avalonia.Media.Immutable;
 using Avalonia.Threading;
 using BogiHub.App.Theme;
 using BogiHub.Core.Control;
+using BogiHub.Core.Input;
 using BogiHub.Runtime;
 
 namespace BogiHub.App;
@@ -19,6 +20,8 @@ public sealed class TrayController : IDisposable
     private readonly App _app;
     private readonly HubRuntime _runtime;
     private readonly TrayIcon _tray;
+    private readonly DispatcherTimer _batteryTimer;
+    private (int? Percent, bool Charging) _shownBattery = (null, false);
 
     public TrayController(App app, HubRuntime runtime)
     {
@@ -28,6 +31,9 @@ public sealed class TrayController : IDisposable
         _tray.Clicked += (_, _) => _app.ShowWindow();
         Rebuild();
         TrayIcon.SetIcons(app, [_tray]);
+        // Battery changes slowly and StatusChanged only fires on control changes, so look every few seconds.
+        _batteryTimer = new DispatcherTimer(TimeSpan.FromSeconds(3), DispatcherPriority.Background, (_, _) => UpdateTooltip());
+        _batteryTimer.Start();
 
         runtime.ProfilesChanged += () => Dispatcher.UIThread.Post(Rebuild);
         runtime.StatusChanged += () => Dispatcher.UIThread.Post(() =>
@@ -124,7 +130,16 @@ public sealed class TrayController : IDisposable
             ControlOwner.Paused => "Paused (emergency stop)",
             _ => "mouse & keyboard (controller's own)",
         };
-        _tray.ToolTipText = $"BogiHub — {who}";
+        var c = s.Controller;
+        bool showBattery = _runtime.Settings.TrayBattery && c.Connected && c.Battery.HasPercent;
+        var battery = showBattery ? ((int?)c.Battery.Percent, c.Battery.Status == PowerStatus.Charging) : (null, false);
+        string charge = battery.Item1 is { } pct ? $" · battery {pct}%{(battery.Item2 ? ", charging" : "")}" : "";
+        _tray.ToolTipText = $"BogiHub · {who}{charge}";
+        if (battery != _shownBattery)
+        {
+            _shownBattery = battery;
+            _tray.Icon = Icons.TrayIcon(battery.Item1, battery.Item2);
+        }
     }
 
     private static NativeMenuItem Item(string text, Action action)
@@ -136,6 +151,7 @@ public sealed class TrayController : IDisposable
 
     public void Dispose()
     {
+        _batteryTimer.Stop();
         _tray.IsVisible = false;
         _tray.Dispose();
     }

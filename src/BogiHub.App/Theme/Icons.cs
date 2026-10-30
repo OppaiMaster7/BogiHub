@@ -64,10 +64,36 @@ public static class Icons
         return bmp;
     }
 
-    public static WindowIcon AppIcon()
+    public static WindowIcon AppIcon() => ToIcon(RenderAppIcon(64));
+
+    /// <summary>
+    /// Tray icon with the controller's charge: the mark moves up and a level bar fills the bottom of the square,
+    /// green, then amber at 20 % and red at 10 %. Charging draws the bar in the accent colour. Null = no battery known.
+    /// </summary>
+    public static WindowIcon TrayIcon(int? percent, bool charging)
+    {
+        if (percent is not { } pct) return AppIcon();
+        const int px = 64;
+        var bmp = new RenderTargetBitmap(new PixelSize(px, px), new Vector(96, 96));
+        using (var ctx = bmp.CreateDrawingContext())
+        {
+            ctx.DrawRectangle(new ImmutableSolidColorBrush(Palette.Surface), new ImmutablePen(new ImmutableSolidColorBrush(Palette.LineStrong), 1.5),
+                new Rect(2, 2, 60, 60), 14, 14);
+            Draw(ctx, Gamepad, new Point(13, 4), 38, new ImmutableSolidColorBrush(Palette.Accent), 2.2);
+            // Thick enough to read at 16 px, where the whole icon is a quarter of this size.
+            var track = new Rect(9, 46, 46, 11);
+            var level = charging ? Palette.Accent : pct <= 10 ? Palette.Danger : pct <= 20 ? Palette.Warn : Palette.Ok;
+            ctx.DrawRectangle(new ImmutableSolidColorBrush(Palette.WithAlpha(level, 0.22)), null, track, 3, 3);
+            double w = Math.Max(4, track.Width * Math.Clamp(pct, 0, 100) / 100.0);
+            ctx.DrawRectangle(new ImmutableSolidColorBrush(level), null, track.WithWidth(w), 3, 3);
+        }
+        return ToIcon(bmp);
+    }
+
+    private static WindowIcon ToIcon(RenderTargetBitmap bmp)
     {
         var ms = new MemoryStream();
-        RenderAppIcon(64).Save(ms);
+        bmp.Save(ms);
         ms.Position = 0;
         return new WindowIcon(ms);
     }

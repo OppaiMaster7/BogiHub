@@ -402,6 +402,13 @@ public sealed class ControlsPage : UserControl, IPage
             panel.Children.Add(Ui.SettingRow("Centre deadzone", null, Ui.Slider(0, 0.6, c.Deadzone, v => $"{v * 100:0}%", v => { c.Deadzone = (float)v; Changed(); }, 140)));
             panel.Children.Add(Ui.SettingRow("Only while clicked", "Touching alone does nothing; press the pad in", Ui.Toggle(c.RequireClick, v => { c.RequireClick = v; Changed(); })));
         }
+        if (c.Mode is PadMode.Mouse or PadMode.Scroll or PadMode.Directional)
+            panel.Children.Add(Ui.SettingRow("Haptics", c.Mode switch
+            {
+                PadMode.Mouse => "Ticks under your thumb as the cursor rolls, like a trackball",
+                PadMode.Scroll => "A tick for every notch of the wheel",
+                _ => "A click when you slide onto a new direction",
+            }, Ui.Toggle(c.Haptics, v => { c.Haptics = v; Changed(); })));
         if (c.Mode == PadMode.Directional)
         {
             foreach (var (label, get, set) in new (string, Func<Binding>, Action<Binding>)[]
@@ -426,7 +433,7 @@ public sealed class ControlsPage : UserControl, IPage
         var g = _editing.Gyro;
         var modes = new[] { GyroMode.Off, GyroMode.Mouse, GyroMode.RightStick }.Where(m => AllowGamepad || m != GyroMode.RightStick).ToArray();
         var panel = Ui.Stack(12, Ui.Text("Gyro (motion aiming)", "h2"),
-            Ui.Text("Basic gyro aiming. Calibration and advanced smoothing are planned for a later version.", "muted"));
+            Ui.Text("Calibrates itself: set the controller down or hold it still for a second and any drift is learned away.", "muted"));
         panel.Children.Add(Ui.SettingRow("Acts as", null, Ui.Combo(modes, g.Mode, m => m switch
         {
             GyroMode.Mouse => "Mouse",
@@ -435,13 +442,26 @@ public sealed class ControlsPage : UserControl, IPage
         }, m => { g.Mode = m; Changed(rebuildEditor: true); }, 170)));
         if (g.Mode == GyroMode.Off) return panel;
 
+        panel.Children.Add(Ui.SettingRow("Turn with", null, Ui.Combo(
+            [GyroTurnAxis.PlayerSpace, GyroTurnAxis.Yaw, GyroTurnAxis.Roll], g.TurnAxis, a => a switch
+            {
+                GyroTurnAxis.Yaw => "Yaw (twist it flat)",
+                GyroTurnAxis.Roll => "Roll (tilt like a wheel)",
+                _ => "Either (recommended)",
+            }, a => { g.TurnAxis = a; Changed(); }, 200)));
         panel.Children.Add(Ui.SettingRow("Sensitivity", null, Ui.Slider(0.1, 6, g.Sensitivity, v => $"{v:0.00}×", v => { g.Sensitivity = (float)v; Changed(); }, 140)));
+        panel.Children.Add(Ui.SettingRow("Up and down speed", null, Ui.Slider(0.25, 2, g.VerticalScale, v => $"{v * 100:0}%", v => { g.VerticalScale = (float)v; Changed(); }, 140)));
+        panel.Children.Add(Ui.SettingRow("Fine aim", "Slows small movements only", Ui.Slider(0, 0.9, g.Precision, v => v < 0.005 ? "Off" : $"{v * 100:0}%", v => { g.Precision = (float)v; Changed(); }, 140)));
+        panel.Children.Add(Ui.SettingRow("Steady hands", "Calms tiny shakes only", Ui.Slider(0, 1, g.Smoothing, v => v < 0.005 ? "Off" : $"{v * 100:0}%", v => { g.Smoothing = (float)v; Changed(); }, 140)));
         panel.Children.Add(Ui.SettingRow("Invert horizontal", null, Ui.Toggle(g.InvertX, v => { g.InvertX = v; Changed(); })));
         panel.Children.Add(Ui.SettingRow("Invert vertical", null, Ui.Toggle(g.InvertY, v => { g.InvertY = v; Changed(); })));
 
         var holds = new PhysicalInput?[] { null, PhysicalInput.RightGripTouch, PhysicalInput.LeftGripTouch, PhysicalInput.RightStickTouch, PhysicalInput.RightPaddle1, PhysicalInput.LeftPaddle1 };
-        panel.Children.Add(Ui.SettingRow("Active", "Hold-to-enable keeps gyro from drifting your aim", Ui.Combo(holds, g.EnableWhile, h => h is null ? "Always" : "While " + PhysicalInputs.DisplayName(h.Value).ToLowerInvariant(),
+        string HoldName(PhysicalInput? h) => h is null ? "Never" : "While " + PhysicalInputs.DisplayName(h.Value).ToLowerInvariant();
+        panel.Children.Add(Ui.SettingRow("Only while", "Gyro works only while you hold or touch this", Ui.Combo(holds, g.EnableWhile, h => h is null ? "Always on" : HoldName(h),
             h => { g.EnableWhile = h; Changed(); }, 200)));
+        panel.Children.Add(Ui.SettingRow("Pause while", "Gyro stops while you hold or touch this", Ui.Combo(holds, g.DisableWhile, HoldName,
+            h => { g.DisableWhile = h; Changed(); }, 200)));
         return panel;
     }
 

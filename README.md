@@ -6,9 +6,9 @@
 
 **Use your Steam Controller in any Windows game. No Steam needed.**
 
-<a href="https://github.com/OppaiMaster7/BogiHub/releases/download/v0.1.2/BogiHub-Setup-0.1.2.exe"><img src="docs/images/download-button.png" width="600" alt="Download BogiHub for Windows"></a>
+<a href="https://github.com/OppaiMaster7/BogiHub/releases/download/v0.2.0/BogiHub-Setup-0.2.0.exe"><img src="docs/images/download-button.png" width="600" alt="Download BogiHub for Windows"></a>
 
-Version <!--version-->0.1.2<!--/version--> (early preview) &nbsp;·&nbsp; Windows 10 and 11 (64 bit)
+Version <!--version-->0.2.0<!--/version--> (early preview) &nbsp;·&nbsp; Windows 10 and 11 (64 bit)
 
 **Try the installer first. If it will not open or installation fails, use the ZIP download below.**
 
@@ -18,8 +18,8 @@ Version <!--version-->0.1.2<!--/version--> (early preview) &nbsp;·&nbsp; Window
 
 | Download | Which one do I need? |
 | :--- | :--- |
-| **[1. Download BogiHub installer (.exe)](https://github.com/OppaiMaster7/BogiHub/releases/download/v0.1.2/BogiHub-Setup-0.1.2.exe)**<br><!--size-->54 MB<!--/size--> | **Try this first.** Installs BogiHub, adds shortcuts, and offers to install ViGEmBus. |
-| **[2. Download BogiHub portable (.zip)](https://github.com/OppaiMaster7/BogiHub/releases/download/v0.1.2/BogiHub-Portable-0.1.2-win-x64.zip)**<br><!--zip-size-->51 MB<!--/zip-size--> | **Installer blocked or will not open? Use this.** Extract the ZIP, install the included driver, then open BogiHub.exe. It worked on a Windows 11 PC where Smart App Control blocked the installer. |
+| **[1. Download BogiHub installer (.exe)](https://github.com/OppaiMaster7/BogiHub/releases/download/v0.2.0/BogiHub-Setup-0.2.0.exe)**<br><!--size-->54 MB<!--/size--> | **Try this first.** Installs BogiHub, adds shortcuts, and offers to install ViGEmBus. |
+| **[2. Download BogiHub portable (.zip)](https://github.com/OppaiMaster7/BogiHub/releases/download/v0.2.0/BogiHub-Portable-0.2.0-win-x64.zip)**<br><!--zip-size-->51 MB<!--/zip-size--> | **Installer blocked or will not open? Use this.** Extract the ZIP, install the included driver, then open BogiHub.exe. It worked on a Windows 11 PC where Smart App Control blocked the installer. |
 | **[Download ViGEmBus driver](https://github.com/nefarius/ViGEmBus/releases/download/v1.22.0/ViGEmBus_1.22.0_x64_x86_arm64.exe)** | **Required for gamepad mode.** The official driver. Both BogiHub downloads already include it. |
 
 > [!IMPORTANT]
@@ -45,7 +45,7 @@ switches between the two by itself, and shows a live picture of every button, st
 
 ### Method 1: Installer (try this first)
 
-1. **[Download the BogiHub installer](https://github.com/OppaiMaster7/BogiHub/releases/download/v0.1.2/BogiHub-Setup-0.1.2.exe)** and open **BogiHub-Setup-0.1.2.exe** from Downloads.
+1. **[Download the BogiHub installer](https://github.com/OppaiMaster7/BogiHub/releases/download/v0.2.0/BogiHub-Setup-0.2.0.exe)** and open **BogiHub-Setup-0.2.0.exe** from Downloads.
 2. If Windows shows **Windows protected your PC**, click **More info**, then **Run anyway**.
 3. Click **Next**, then **Next** again. **Leave “Install the ViGEmBus driver” ticked.** If it is already installed, this box is hidden.
 4. Click **Install**. Allow the driver's Windows administrator prompt and restart if requested.
@@ -57,7 +57,7 @@ switches between the two by itself, and shows a live picture of every button, st
 
 ### Method 2: Portable ZIP (if the installer fails)
 
-1. **[Download the portable ZIP](https://github.com/OppaiMaster7/BogiHub/releases/download/v0.1.2/BogiHub-Portable-0.1.2-win-x64.zip)**. Make sure it's **BogiHub-Portable-0.1.2-win-x64.zip**, not GitHub's “Source code (zip)”.
+1. **[Download the portable ZIP](https://github.com/OppaiMaster7/BogiHub/releases/download/v0.2.0/BogiHub-Portable-0.2.0-win-x64.zip)**. Make sure it's **BogiHub-Portable-0.2.0-win-x64.zip**, not GitHub's “Source code (zip)”.
 2. In Downloads, right-click the ZIP, choose **Extract All…**, then **Extract**. **Do not run BogiHub from inside the ZIP.**
 3. **Install ViGEmBus first:** open the extracted folder, open **drivers**, and run **ViGEmBus_1.22.0_x64_x86_arm64.exe**. Finish the driver setup, allow its administrator prompt, and restart if asked. Skip this only if ViGEmBus is already installed on this PC.
 4. Return to the extracted folder and double-click **BogiHub.exe**. Keep all the extracted files together.
@@ -74,7 +74,7 @@ so Windows could still block BogiHub.exe itself on some PCs. If that happens, se
 <br>
 
 **Installer:** BogiHub is in your **Start menu** and, if you kept the box ticked, on your **desktop**. The downloaded
-**BogiHub-Setup-0.1.2.exe** is only the installer: you can delete it after installing.
+**BogiHub-Setup-0.2.0.exe** is only the installer: you can delete it after installing.
 
 **ZIP:** open **BogiHub.exe** from the folder you extracted. You can keep that folder anywhere convenient.
 Settings and profiles still live in `%APPDATA%\BogiHub`, so they follow your Windows account rather than the ZIP folder.
@@ -85,11 +85,11 @@ Settings and profiles still live in `%APPDATA%\BogiHub`, so they follow your Win
 <summary><b>Want to check the download is the real file?</b></summary>
 <br>
 
-Open **PowerShell** in your Downloads folder and run `Get-FileHash .\BogiHub-Setup-0.1.2.exe`. The hash it prints
-should be <!--sha256-->`CD87D27CF3E30A9C2E079A6BC116BF5ACEDA56B451A9853F96B5075A79DC32BE`<!--/sha256-->.
+Open **PowerShell** in your Downloads folder and run `Get-FileHash .\BogiHub-Setup-0.2.0.exe`. The hash it prints
+should be <!--sha256-->`2E9D63F4C65265632A471ABD6A97E7E73472B94FA5CB2FD1E167329E9CA0B424`<!--/sha256-->.
 
-For the ZIP, run `Get-FileHash .\BogiHub-Portable-0.1.2-win-x64.zip`. Its hash should be
-<!--zip-sha256-->`F4A4977B121259BA5DC0ABF53849765A127999E03AE9D5E5F6308DA4870D45E3`<!--/zip-sha256-->.
+For the ZIP, run `Get-FileHash .\BogiHub-Portable-0.2.0-win-x64.zip`. Its hash should be
+<!--zip-sha256-->`C08CA5A772179D2A71A0DF3914577B6A7EF18BCFDE091E48FC216EF49455658F`<!--/zip-sha256-->.
 
 </details>
 
@@ -121,7 +121,7 @@ controller, and the desktop gets the controller's own mouse and keyboard. **Manu
 and can close Steam for you.
 
 **🔔 Clear notifications.** Who is in control, low battery, Steam getting in the way, connected or not. They slide in
-over your game, never take focus, and let clicks pass through.
+over your game, never take focus, and let clicks pass through. The tray icon shows the controller's charge too.
 
 </td>
 <td width="50%" valign="top">
@@ -133,8 +133,9 @@ over your game, never take focus, and let clicks pass through.
 </table>
 
 **🕹️ Change any control.** Every button, the four rear paddles, the triggers, both sticks (dead zones, speed, or as
-keys or a mouse), both trackpads (trackball mouse, scrolling, a direction pad or a stick), the touch sensors and basic
-gyro.
+keys or a mouse), both trackpads (trackball mouse, scrolling, a direction pad or a stick, with little haptic ticks
+under your thumb), the touch sensors and gyro aiming. The gyro calibrates itself whenever you hold still, turns
+however you hold the controller, and can pause while you lift your thumb.
 
 **📁 A profile for each game.** Profiles switch by themselves when a game starts, or you pick one yourself. They are
 plain files in `%APPDATA%\BogiHub\profiles` that you can import and export.
@@ -317,6 +318,7 @@ dotnet run --project tools/BogiHub.Probe            # live view and coverage che
 dotnet run --project tools/BogiHub.Probe -- --list  # 3 second check, no input needed
 dotnet run --project tools/BogiHub.Probe -- --vigem # plugs in a virtual Xbox pad for about 2 s and checks it through XInput
 dotnet run --project tools/BogiHub.Probe -- --guard # self test of the Steam guard
+dotnet run --project tools/BogiHub.Probe -- --haptics # plays trackpad haptics on each side, to check which pad is which
 ```
 
 </details>
