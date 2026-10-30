@@ -240,6 +240,16 @@ dotnet run --project tools/BogiHub.Probe -- --guard # self test of the Steam gua
 
 </details>
 
+## Code signing policy
+
+BogiHub has applied to the [SignPath Foundation](https://signpath.org/) open-source code signing program.
+**Approval is pending; the current v0.1.0 preview is unsigned.** Once approved and integrated into the release
+process, official Windows releases are planned to use free code signing provided by
+[SignPath.io](https://about.signpath.io/), with a certificate from the [SignPath Foundation](https://signpath.org/).
+
+See the [Code signing policy](docs/signing.md) for signing scope, maintainer roles and privacy information.
+BogiHub remains licensed under the [MIT License](LICENSE).
+
 ## Credits
 
 Built on [SDL](https://github.com/libsdl-org/SDL), [Avalonia](https://github.com/AvaloniaUI/Avalonia),
