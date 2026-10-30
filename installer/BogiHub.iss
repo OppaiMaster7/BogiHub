@@ -31,6 +31,12 @@ AppUpdatesURL={#RepoUrl}/releases
 AppCopyright=MIT License
 VersionInfoVersion={#AppVersion}
 VersionInfoDescription=BogiHub Setup
+#ifdef Sign
+; Local certificate builds pass /DSign and the "bogihub" sign tool. Sign Setup, its uninstaller and its temporary
+; self-copies during compilation; signing only the final installer leaves those embedded executables unsigned.
+SignTool=bogihub
+SignedUninstaller=yes
+#endif
 
 PrivilegesRequired=lowest
 ArchitecturesAllowed=x64compatible

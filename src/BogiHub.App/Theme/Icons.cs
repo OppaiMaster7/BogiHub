@@ -121,6 +121,9 @@ public static class Icons
         int w = 164 * scale, h = 314 * scale;
         var bmp = new RenderTargetBitmap(new PixelSize(w, h), new Vector(96, 96));
         using var ctx = bmp.CreateDrawingContext();
+        // Grayscale text smoothing: ClearType's coloured fringes suit a live screen, not a picture the installer scales
+        // (at 125 % display scaling they smear into stray marks between the letters).
+        using (ctx.PushTextOptions(new TextOptions { TextRenderingMode = TextRenderingMode.Antialias }))
         using (ctx.PushTransform(Matrix.CreateScale(scale, scale)))
         {
             var bounds = new Rect(0, 0, 164, 314);

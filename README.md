@@ -130,6 +130,22 @@ sure the file is the real one, check its hash (see [Install](#install)).
 
 </details>
 
+<a name="smart-app-control"></a>
+<details>
+<summary><b>Windows blocked it completely, with no Run anyway button.</b></summary>
+<br>
+
+This can be **Smart App Control**, a Windows 11 protection that can block untrusted apps without an option to
+allow just one app. The installer may say **Unable to execute file in the temporary directory**.
+
+The current preview is unsigned. BogiHub has applied for SignPath signing, but approval and release integration
+are still pending: see the [Code signing policy](docs/signing.md). Signing is planned; it does not guarantee that
+every Windows security check will allow an app or its dependencies. You can wait for a signed release and check
+[Microsoft's Smart App Control FAQ](https://support.microsoft.com/en-us/windows/security/threat-malware-protection/smart-app-control-frequently-asked-questions)
+for current options and limitations.
+
+</details>
+
 <details>
 <summary><b>My game doesn't react to the controller.</b></summary>
 <br>
@@ -218,6 +234,9 @@ download button at that version, so commit README.md together with the release.
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/build-installer.ps1
 ```
+
+For a local packaging check, add `-SkipReadmeUpdate` to keep the published download size and checksum unchanged.
+Optional signing with your own certificate is described in [Signing BogiHub locally](docs/signing.md#signing-bogihub-locally).
 
 ```
 src/BogiHub.Core               input model, mapping engine, profiles, control policy, notices (no OS code; unit tested)
