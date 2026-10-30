@@ -40,6 +40,12 @@ public partial class App : Application
             _runtime = new HubRuntime(data);
             _runtime.Start();
             InstallCrashGuards(data);
+            try
+            {
+                if (BogiHub.Platform.Windows.Autostart.FollowMove(Environment.ProcessPath!))
+                    _runtime.Log.Info($"Start with Windows now opens this copy: {Environment.ProcessPath}");
+            }
+            catch (Exception ex) { _runtime.Log.Warn($"Could not update Start with Windows: {ex.Message}"); }
 
             desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             // ShutdownRequested only comes from the OS (log-off); Exit covers every way out, including our own Shutdown().
@@ -64,7 +70,7 @@ public partial class App : Application
             _overlay.ActionInvoked += n =>
             {
                 ShowWindow();
-                _window?.Navigate(n.Key == "driver" ? "settings" : "overview");
+                _window?.Navigate(n.Key is "driver" or "update" ? "settings" : "overview");
             };
             var runtime = _runtime;
             runtime.Notify += n => Dispatcher.UIThread.Post(() =>

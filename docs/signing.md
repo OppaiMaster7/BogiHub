@@ -3,7 +3,7 @@
 ## Application status
 
 BogiHub has applied to the [SignPath Foundation](https://signpath.org/) open-source code signing program.
-**Approval is pending.** The [v0.1.1 preview](https://github.com/OppaiMaster7/BogiHub/releases/tag/v0.1.1)
+**Approval is pending.** The [current preview](https://github.com/OppaiMaster7/BogiHub/releases)
 is unsigned, and this repository does not yet have a SignPath signing workflow.
 
 After acceptance and release integration, BogiHub plans to publish signed Windows releases with this attribution:
@@ -35,14 +35,21 @@ These commitments follow the [SignPath Foundation conditions](https://signpath.o
 ## Privacy policy
 
 BogiHub processes controller input and foreground application information locally to select profiles and produce
-gamepad, keyboard and mouse output. It has no built-in telemetry, automatic crash uploads or automatic update checks.
+gamepad, keyboard and mouse output. It has no built-in telemetry and no automatic crash uploads.
 Settings, profiles and diagnostic logs are stored under `%APPDATA%\BogiHub`.
+
+The update check is **off by default**. Only when the user turns on **Check for new versions** (Settings > Updates),
+or clicks **Check now**, does BogiHub ask GitHub's API (`api.github.com`) for this repository's public release list:
+at most once a day with the setting on. The request carries BogiHub's version number in its User-Agent and nothing
+else from the app: no settings, profiles, logs or controller data. The
+[GitHub Privacy Statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement)
+applies to that request.
 
 Exporting a log saves a local file; it does not upload it. Logs can include profile names, application executable
 names, device details and diagnostic events. Review a log before choosing to share it in a public issue.
 
 BogiHub does not send information to network services unless the user requests an action that uses them.
-The driver-download buttons open GitHub in the user's browser, where the
+The driver download button (in the installed app) opens GitHub in the user's browser, where the
 [GitHub Privacy Statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement)
 applies. The bundled ViGEmBus installer is a separate third-party component; its notices are listed in
 [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md).
@@ -77,7 +84,7 @@ Release notes will identify when SignPath signing is enabled. A policy statement
 To inspect the downloaded installer in PowerShell, replace the example filename with the version you downloaded:
 
 ```powershell
-$signature = Get-AuthenticodeSignature .\BogiHub-Setup-0.1.1.exe
+$signature = Get-AuthenticodeSignature .\BogiHub-Setup-0.1.2.exe
 $signature | Format-List Status, StatusMessage
 $signature.SignerCertificate | Format-List Subject, Issuer, NotAfter
 ```

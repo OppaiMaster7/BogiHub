@@ -39,6 +39,8 @@ public sealed class AppSettings
     /// <summary>Also notify every time the controller switches between gamepad and mouse &amp; keyboard.</summary>
     public bool NotifyModeChanges { get; set; } = true;
     public NoticePosition NotificationPosition { get; set; } = NoticePosition.TopCenter;
+    /// <summary>Opt-in: once a day, ask GitHub whether a newer BogiHub is out. Off by default; nothing else is sent.</summary>
+    public bool CheckForUpdates { get; set; }
 
     public static AppSettings Load(string path)
     {

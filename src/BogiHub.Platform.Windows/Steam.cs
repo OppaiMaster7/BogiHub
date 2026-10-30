@@ -57,4 +57,24 @@ public static class Autostart
         if (enabled) key.SetValue(ValueName, $"\"{exePath}\" --minimized");
         else key.DeleteValue(ValueName, throwOnMissingValue: false);
     }
+
+    /// <summary>
+    /// A portable update is extracted into a new folder, which leaves the Run key starting the old copy (or nothing,
+    /// once that folder is deleted). On launch, take the key over when the copy it names is gone or older than this one.
+    /// Returns true when the key was moved.
+    /// </summary>
+    public static bool FollowMove(string exePath)
+    {
+        using var key = Registry.CurrentUser.OpenSubKey(RunKey, writable: true);
+        if (key?.GetValue(ValueName) is not string command) return false;
+        string? stored = command.StartsWith('"') && command.IndexOf('"', 1) is var end and > 0 ? command[1..end] : null;
+        if (stored is not null && string.Equals(Path.GetFullPath(stored), Path.GetFullPath(exePath), StringComparison.OrdinalIgnoreCase))
+            return false;
+        if (stored is not null && File.Exists(stored) && FileVersion(stored) >= FileVersion(exePath)) return false;
+        key.SetValue(ValueName, $"\"{exePath}\" --minimized");
+        return true;
+    }
+
+    private static Version FileVersion(string path) =>
+        Version.TryParse(FileVersionInfo.GetVersionInfo(path).FileVersion, out var v) ? v : new Version(0, 0);
 }

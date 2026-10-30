@@ -119,7 +119,7 @@ public sealed class OverviewPage : UserControl, IPage
         var profileCard = Ui.Card(Ui.Stack(6, _profileName, _foreground), "Active profile");
 
         _driverActions = Ui.Row(8,
-            Ui.Button("Get ViGEmBus driver…", OpenDriverPage, "primary"),
+            Ui.Button(DriverSetup.ButtonLabel, () => DriverSetup.Run(this, runtime), "primary"),
             Ui.Button("Check again", runtime.RefreshDriverStatus, "ghost"));
         _driverActions.IsVisible = false;
 
@@ -159,12 +159,6 @@ public sealed class OverviewPage : UserControl, IPage
         Grid.SetColumn(value, 1);
         g.Children.Add(l);
         g.Children.Add(value);
-    }
-
-    private async void OpenDriverPage()
-    {
-        var top = TopLevel.GetTopLevel(this);
-        if (top is not null) await top.Launcher.LaunchUriAsync(new Uri("https://github.com/nefarius/ViGEmBus/releases/tag/v1.22.0"));
     }
 
     private void OnExitSteam()

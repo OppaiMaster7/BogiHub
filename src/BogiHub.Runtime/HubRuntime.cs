@@ -62,6 +62,8 @@ public sealed class HubRuntime : IControllerSink, IDisposable
     private readonly MappingEngine _engine;
     private readonly OutputFrame _frame = new();
     private readonly Timer _policyTimer;
+    private readonly Timer _updateTimer;
+    private string? _updateNoticeShown; // tag already announced this run
     private readonly object _policyLock = new();
 
     private volatile bool _outputsActive;
@@ -112,6 +114,7 @@ public sealed class HubRuntime : IControllerSink, IDisposable
 
         _gamepad.Rumble += OnGameRumble;
         _policyTimer = new Timer(_ => PollSystem(), null, Timeout.Infinite, Timeout.Infinite);
+        _updateTimer = new Timer(_ => _ = CheckForUpdatesAsync(scheduled: true), null, Timeout.Infinite, Timeout.Infinite);
     }
 
     public string DataDirectory { get; }
@@ -119,6 +122,7 @@ public sealed class HubRuntime : IControllerSink, IDisposable
     public ProfileStore Store { get; }
     public AppSettings Settings { get; private set; }
     public DiagnosticsLog Log { get; }
+    public UpdateChecker Updates { get; } = new();
 
     public event Action? StatusChanged;
     public event Action? ProfilesChanged;
@@ -160,6 +164,29 @@ public sealed class HubRuntime : IControllerSink, IDisposable
         Log.Info(_driverInstalled ? "ViGEmBus driver found" : "ViGEmBus driver not installed: controller output unavailable until it is installed");
         PollSystem();
         _policyTimer.Change(1000, 1000);
+        // Hourly look at the clock; the check itself runs at most once a day, and only with the setting on.
+        _updateTimer.Change(TimeSpan.FromSeconds(30), TimeSpan.FromHours(1));
+    }
+
+    /// <summary>
+    /// Asks GitHub for a newer release. Scheduled checks need the opt-in setting and a day since the last success;
+    /// "Check now" in Settings is the user asking, so it always runs. A background find is announced once per run.
+    /// </summary>
+    public async Task CheckForUpdatesAsync(bool scheduled = false)
+    {
+        if (scheduled && (!Settings.CheckForUpdates ||
+            Updates.LastSuccessUtc is { } last && DateTime.UtcNow - last < TimeSpan.FromHours(23))) return;
+        var found = await Updates.CheckAsync();
+        if (Updates.LastError is { } error) Log.Warn($"Update check failed: {error}");
+        else Log.Info(found is { } f ? $"Update check: {f.Tag} is available" : $"Update check: {UpdateChecker.Current} is the newest version");
+        // "Check now" answers on the Settings page itself; only the background check needs a notice.
+        if (scheduled && found is { } r && r.Tag != _updateNoticeShown)
+        {
+            _updateNoticeShown = r.Tag;
+            Emit(new Notice("update", NoticeKind.Update, NoticeTone.Info, NoticeIcon.Download,
+                $"BogiHub {r.Tag.TrimStart('v', 'V')} is out", "Click to open Settings and download it.",
+                Action: NoticeAction.OpenApp, DurationMs: 8000));
+        }
     }
 
     public void SetEmergencyPause(bool paused)
@@ -632,6 +659,7 @@ public sealed class HubRuntime : IControllerSink, IDisposable
     public void Dispose()
     {
         _policyTimer.Dispose();
+        _updateTimer.Dispose();
         WindowsEvents.BlockForeignWhileControllerActive = false;
         _outputsActive = false;
         _controller.Acquire = false;

@@ -391,6 +391,7 @@ internal sealed class NoticeGlyph : Control
         NoticeIcon.Steam => Icons.AppWindow,
         NoticeIcon.Pause => Icons.Pause,
         NoticeIcon.Keys => Icons.Keyboard,
+        NoticeIcon.Download => Icons.Download,
         NoticeIcon.Battery => Icons.Battery,
         NoticeIcon.Charging => Icons.BatteryCharging,
         _ => Icons.Warning,

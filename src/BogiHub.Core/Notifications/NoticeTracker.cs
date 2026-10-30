@@ -4,11 +4,11 @@ using BogiHub.Core.Input;
 namespace BogiHub.Core.Notifications;
 
 /// <summary>What a notice is about. The user can mute <see cref="Mode"/> on its own (it is the chattiest).</summary>
-public enum NoticeKind { Mode, Controller, Battery, Steam, Problem, Test }
+public enum NoticeKind { Mode, Controller, Battery, Steam, Problem, Update, Test }
 
 public enum NoticeTone { Info, Ok, Warn, Danger }
 
-public enum NoticeIcon { Gamepad, Mouse, Steam, Pause, Controller, Unplugged, Battery, Charging, Warning, Keys }
+public enum NoticeIcon { Gamepad, Mouse, Steam, Pause, Controller, Unplugged, Battery, Charging, Warning, Keys, Download }
 
 /// <summary>Where on the main screen notices appear.</summary>
 public enum NoticePosition { TopCenter, TopRight, BottomRight }
