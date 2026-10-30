@@ -6,16 +6,25 @@
 
 **Use your Steam Controller in any Windows game. No Steam needed.**
 
-<a href="https://github.com/OppaiMaster7/BogiHub/releases/download/v0.1.0/BogiHub-Setup-0.1.0.exe"><img src="docs/images/download-button.png" width="600" alt="Download BogiHub for Windows"></a>
+<a href="https://github.com/OppaiMaster7/BogiHub/releases/download/v0.1.1/BogiHub-Setup-0.1.1.exe"><img src="docs/images/download-button.png" width="600" alt="Download BogiHub for Windows"></a>
 
-Version <!--version-->0.1.0<!--/version--> (early preview) &nbsp;·&nbsp; <!--size-->54 MB<!--/size--> &nbsp;·&nbsp; Windows 10 and 11<br>
-The button downloads **BogiHub-Setup-0.1.0.exe** straight to your Downloads folder.
+Version <!--version-->0.1.1<!--/version--> (early preview) &nbsp;·&nbsp; Windows 10 and 11 (64 bit)
 
-**[Install](#install)** &nbsp;·&nbsp; **[How to use it](#how-to-use-it)** &nbsp;·&nbsp; **[What it does](#what-it-does)** &nbsp;·&nbsp; **[Steam](#playing-with-steam-open)** &nbsp;·&nbsp; **[Help](#help)** &nbsp;·&nbsp; **[Update or remove](#update-or-remove)**
+**Try the installer first. If it will not open or installation fails, use the ZIP download below.**
 
-<img src="docs/images/overview.png" alt="BogiHub showing a live picture of the controller" width="860">
+**[Requirements](#requirements)** &nbsp;·&nbsp; **[Installer steps](#method-1-installer--try-this-first)** &nbsp;·&nbsp; **[ZIP steps](#method-2-portable-zip--if-the-installer-fails)** &nbsp;·&nbsp; **[How to use it](#how-to-use-it)** &nbsp;·&nbsp; **[Help](#help)**
 
 </div>
+
+| Download | Which one do I need? |
+| :--- | :--- |
+| **[1. Download BogiHub installer (.exe)](https://github.com/OppaiMaster7/BogiHub/releases/download/v0.1.1/BogiHub-Setup-0.1.1.exe)** — <!--size-->54 MB<!--/size--> | **Try this first.** Installs BogiHub, adds shortcuts, and offers to install ViGEmBus. |
+| **[2. Download BogiHub portable (.zip)](https://github.com/OppaiMaster7/BogiHub/releases/download/v0.1.1/BogiHub-Portable-0.1.1-win-x64.zip)** — <!--zip-size-->51 MB<!--/zip-size--> | **Installer blocked or will not open? Try this.** Extract the ZIP, install the included driver, then open BogiHub.exe. |
+| **[Download ViGEmBus driver](https://github.com/nefarius/ViGEmBus/releases/download/v1.22.0/ViGEmBus_1.22.0_x64_x86_arm64.exe)** | **Required for gamepad mode.** Official driver download; also included in both BogiHub packages. |
+
+> [!IMPORTANT]
+> **ViGEmBus MUST be installed on this PC for gamepad mode to work.** Without it, games will not see BogiHub's
+> virtual Xbox controller. With the ZIP, install the driver yourself from the included **drivers** folder.
 
 BogiHub makes the controller a normal Xbox controller in your games, and a mouse and keyboard on the desktop. It
 switches between the two by itself, and shows a live picture of every button, stick, trackpad and grip you touch.
@@ -24,27 +33,47 @@ switches between the two by itself, and shows a live picture of every button, st
 > **Early preview.** Everything runs on the real controller, but testing inside games has only just started. See
 > [what has been tested](docs/compatibility.md), and please [tell me what works for you](https://github.com/OppaiMaster7/BogiHub/issues/new/choose).
 
+## Requirements
+
+- **Windows 10 or 11, 64 bit (x64).** No separate .NET installation needed.
+- **Steam Controller (2026).** The wireless puck has been tested; USB-C and Bluetooth testing is still pending.
+- **[ViGEmBus 1.22.0](https://github.com/nefarius/ViGEmBus/releases/download/v1.22.0/ViGEmBus_1.22.0_x64_x86_arm64.exe) installed — REQUIRED for Xbox/gamepad output.** Install it once on each PC. Administrator permission is needed for the driver; BogiHub itself runs without admin rights.
+
 ## Install
 
-It takes about a minute.
+### Method 1: Installer — try this first
 
-1. Click the big green **Download BogiHub** button above. Your browser saves **BogiHub-Setup-0.1.0.exe** in your
-   **Downloads** folder. If the browser says the file isn't commonly downloaded, choose **Keep**.
-2. Open **BogiHub-Setup-0.1.0.exe**. If Windows says **Windows protected your PC**, click **More info**, then
-   **Run anyway**. Windows shows this for new apps that aren't signed yet.
-3. Click **Next**, then **Next** again.
-4. Leave **Install the ViGEmBus driver** ticked. It's what lets games see an Xbox controller. (You only see this box
-   the first time.)
-5. Click **Install**. When Windows asks if the driver may make changes, click **Yes**.
-6. Click **Finish**. BogiHub opens.
-7. Turn on your controller. BogiHub shows it live, and that's it: open any game and play.
+1. **[Download the BogiHub installer](https://github.com/OppaiMaster7/BogiHub/releases/download/v0.1.1/BogiHub-Setup-0.1.1.exe)** and open **BogiHub-Setup-0.1.1.exe** from Downloads.
+2. If Windows shows **Windows protected your PC**, use **More info → Run anyway** if that option is available and you trust this download.
+3. Click **Next**, then **Next** again. **Leave “Install the ViGEmBus driver” ticked.** If it is already installed, this box is hidden.
+4. Click **Install**. Allow the driver's Windows administrator prompt and restart if requested.
+5. Click **Finish**, turn on your controller, and open your game.
+
+> [!TIP]
+> **Installer will not open? “Unable to execute file in the temporary directory”? Error 4551?**
+> Try **[Method 2: download and extract the ZIP](#method-2-portable-zip--if-the-installer-fails)** below.
+
+### Method 2: Portable ZIP — if the installer fails
+
+1. **[Download the portable ZIP](https://github.com/OppaiMaster7/BogiHub/releases/download/v0.1.1/BogiHub-Portable-0.1.1-win-x64.zip)** — choose **BogiHub-Portable-0.1.1-win-x64.zip**, not GitHub's “Source code (zip)”.
+2. In Downloads, right-click the ZIP → **Extract All…** → **Extract**. **Do not run BogiHub from inside the ZIP.**
+3. **Install ViGEmBus first:** open the extracted folder, open **drivers**, and run **ViGEmBus_1.22.0_x64_x86_arm64.exe**. Finish the driver setup, allow its administrator prompt, and restart if asked. Skip this only if ViGEmBus is already installed on this PC.
+4. Return to the extracted folder and double-click **BogiHub.exe**. Keep all the extracted files together.
+5. In BogiHub, open **Settings** and check that **Virtual Xbox controller** says **Installed**. Turn on your controller and open your game.
+
+**The ZIP skips BogiHub's installer; it does not guarantee Windows will allow the unsigned app or its libraries.**
+If Windows blocks BogiHub.exe too, see [Windows blocks the app](#smart-app-control). A **START-HERE.txt** file with
+these steps is included in the ZIP.
 
 <details>
 <summary><b>Where did it install? Which file do I open later?</b></summary>
 <br>
 
-BogiHub is in your **Start menu** and, if you kept the box ticked, on your **desktop**. The download,
-**BogiHub-Setup-0.1.0.exe**, is only the installer: you can delete it after installing.
+**Installer:** BogiHub is in your **Start menu** and, if you kept the box ticked, on your **desktop**. The downloaded
+**BogiHub-Setup-0.1.1.exe** is only the installer: you can delete it after installing.
+
+**ZIP:** open **BogiHub.exe** from the folder you extracted. You can keep that folder anywhere convenient.
+Settings and profiles still live in `%APPDATA%\BogiHub`, so they follow your Windows account rather than the ZIP folder.
 
 </details>
 
@@ -52,8 +81,11 @@ BogiHub is in your **Start menu** and, if you kept the box ticked, on your **des
 <summary><b>Want to check the download is the real file?</b></summary>
 <br>
 
-Open **PowerShell** in your Downloads folder and run `Get-FileHash .\BogiHub-Setup-0.1.0.exe`. The hash it prints
-should be <!--sha256-->`0C3FF6E3A4787F8E24CA54D209D268E3EBDF4E961F4B454E86FB3CE108B3BEB3`<!--/sha256-->.
+Open **PowerShell** in your Downloads folder and run `Get-FileHash .\BogiHub-Setup-0.1.1.exe`. The hash it prints
+should be <!--sha256-->`A38FA6393B62AA3A230C20EA3847483C4CF233E48EA652A79D0569CE2DA64FB1`<!--/sha256-->.
+
+For the ZIP, run `Get-FileHash .\BogiHub-Portable-0.1.1-win-x64.zip`. Its hash should be
+<!--zip-sha256-->`88DDA6573238A9C35490B362633118383AA6C5A60988B8C49FAFC5FB10271AAE`<!--/zip-sha256-->.
 
 </details>
 
@@ -69,6 +101,10 @@ should be <!--sha256-->`0C3FF6E3A4787F8E24CA54D209D268E3EBDF4E961F4B454E86FB3CE1
 | **Use different controls for each game** | Open **Profiles**. A game's profile turns on by itself when the game starts. |
 
 ## What it does
+
+<p align="center">
+  <img src="docs/images/overview.png" alt="BogiHub showing a live picture of the controller" width="860">
+</p>
 
 <table>
 <tr>
@@ -138,6 +174,9 @@ sure the file is the real one, check its hash (see [Install](#install)).
 This can be **Smart App Control**, a Windows 11 protection that can block untrusted apps without an option to
 allow just one app. The installer may say **Unable to execute file in the temporary directory**.
 
+If only Setup is blocked, try the [portable ZIP steps](#method-2-portable-zip--if-the-installer-fails).
+If BogiHub.exe or a library is blocked after extraction, the ZIP cannot fix that trust decision.
+
 The current preview is unsigned. BogiHub has applied for SignPath signing, but approval and release integration
 are still pending: see the [Code signing policy](docs/signing.md). Signing is planned; it does not guarantee that
 every Windows security check will allow an app or its dependencies. You can wait for a signed release and check
@@ -152,7 +191,8 @@ for current options and limitations.
 
 Open BogiHub's **Overview** page while the game is running. The **Who's in control** card should say **Gamepad**.
 If it says **Mouse & keyboard**, hold the **…** button for 1.5 seconds. If gamepad mode can't turn on at all, the ViGEmBus driver is missing: run the
-installer again and leave **Install the ViGEmBus driver** ticked.
+installer again and leave **Install the ViGEmBus driver** ticked. ZIP users: run the driver installer in the
+extracted **drivers** folder, then click **Check again** in BogiHub's Settings.
 
 </details>
 
@@ -213,6 +253,10 @@ settings and profiles.
 **To remove BogiHub**, open Windows **Settings** > **Apps**, find **BogiHub** and choose **Uninstall**. It asks whether
 to keep your settings.
 
+**ZIP users:** to update, exit BogiHub from its tray menu, extract the new ZIP into a new folder, and run the new
+**BogiHub.exe**. Your settings and profiles are kept. To remove it, turn off **Start with Windows** if enabled,
+exit BogiHub, and delete the extracted folder.
+
 ## Build it yourself
 
 <details>
@@ -238,6 +282,16 @@ powershell -ExecutionPolicy Bypass -File scripts/build-installer.ps1
 For a local packaging check, add `-SkipReadmeUpdate` to keep the published download size and checksum unchanged.
 Optional signing with your own certificate is described in [Signing BogiHub locally](docs/signing.md#signing-bogihub-locally).
 
+To build the portable ZIP from the same published app files after building the installer:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/build-portable.ps1 -UseExistingPublish
+```
+
+Without `-UseExistingPublish`, the script publishes the app first. It bundles the official, checksum- and
+signature-verified ViGEmBus installer, adds **START-HERE.txt**, and updates this page's ZIP link, size and hash.
+Use `-SkipReadmeUpdate` for local checks. Upload both packages to the matching release before publishing the links.
+
 ```
 src/BogiHub.Core               input model, mapping engine, profiles, control policy, notices (no OS code; unit tested)
 src/BogiHub.Devices.Sdl        SDL3 bindings and the controller reader thread
@@ -262,7 +316,7 @@ dotnet run --project tools/BogiHub.Probe -- --guard # self test of the Steam gua
 ## Code signing policy
 
 BogiHub has applied to the [SignPath Foundation](https://signpath.org/) open-source code signing program.
-**Approval is pending; the current v0.1.0 preview is unsigned.** Once approved and integrated into the release
+**Approval is pending; the current v0.1.1 preview is unsigned.** Once approved and integrated into the release
 process, official Windows releases are planned to use free code signing provided by
 [SignPath.io](https://about.signpath.io/), with a certificate from the [SignPath Foundation](https://signpath.org/).
 

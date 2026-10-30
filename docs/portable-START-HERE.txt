@@ -1,0 +1,50 @@
+BOGIHUB @VERSION@ - START HERE
+============================
+
+REQUIRED FOR GAMEPAD MODE: INSTALL ViGEmBus FIRST.
+Without ViGEmBus, games will not see BogiHub's virtual Xbox controller.
+You only need to install this driver once on each PC.
+
+1. Extract the ENTIRE ZIP: right-click it, choose "Extract All", then "Extract".
+   Do not run BogiHub from inside the ZIP preview.
+
+2. Open the extracted folder, then the "drivers" folder.
+   Run ViGEmBus_1.22.0_x64_x86_arm64.exe and finish its installation.
+   Allow the Windows administrator prompt. Restart if the driver asks you to.
+   If ViGEmBus is already installed on this PC, skip this step.
+
+3. Return to the extracted folder and double-click BogiHub.exe.
+   Keep BogiHub.exe together with ALL the other extracted files and folders.
+   No separate .NET installation is needed.
+
+4. Turn on your Steam Controller. In BogiHub, open Settings and check that
+   "Virtual Xbox controller" says "Installed". Then open your game.
+
+This ZIP avoids the BogiHub installer. BogiHub itself is still unsigned:
+Windows may still block the app or a library. The ZIP is not a guaranteed
+fix for Smart App Control. Signing support is pending SignPath approval
+and release integration.
+
+Requirements: Windows 10/11 x64, Steam Controller (2026), and ViGEmBus for
+gamepad output. The wireless puck has been tested; USB-C and Bluetooth
+testing is still pending. Administrator permission is needed for the driver,
+not for running BogiHub itself.
+
+Official driver download (if you need it separately):
+https://github.com/nefarius/ViGEmBus/releases/download/v1.22.0/ViGEmBus_1.22.0_x64_x86_arm64.exe
+
+Updates: exit BogiHub from its tray menu, extract the new ZIP into a new
+folder, and run the new BogiHub.exe. Settings and profiles stay in
+%APPDATA%\BogiHub. This package needs no BogiHub installer, but settings
+are stored in your Windows account, not beside the executable.
+
+Removal: exit BogiHub and delete the extracted folder. If you enabled
+"Start with Windows", turn that setting off before deleting the folder.
+
+Help and current downloads:
+https://github.com/OppaiMaster7/BogiHub
+
+Code signing policy:
+https://github.com/OppaiMaster7/BogiHub/blob/main/docs/signing.md
+
+See LICENSE and THIRD_PARTY_NOTICES.md for licences and component notices.

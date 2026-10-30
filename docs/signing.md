@@ -3,7 +3,7 @@
 ## Application status
 
 BogiHub has applied to the [SignPath Foundation](https://signpath.org/) open-source code signing program.
-**Approval is pending.** The [v0.1.0 preview](https://github.com/OppaiMaster7/BogiHub/releases/tag/v0.1.0)
+**Approval is pending.** The [v0.1.1 preview](https://github.com/OppaiMaster7/BogiHub/releases/tag/v0.1.1)
 is unsigned, and this repository does not yet have a SignPath signing workflow.
 
 After acceptance and release integration, BogiHub plans to publish signed Windows releases with this attribution:
@@ -77,7 +77,7 @@ Release notes will identify when SignPath signing is enabled. A policy statement
 To inspect the downloaded installer in PowerShell, replace the example filename with the version you downloaded:
 
 ```powershell
-$signature = Get-AuthenticodeSignature .\BogiHub-Setup-0.1.0.exe
+$signature = Get-AuthenticodeSignature .\BogiHub-Setup-0.1.1.exe
 $signature | Format-List Status, StatusMessage
 $signature.SignerCertificate | Format-List Subject, Issuer, NotAfter
 ```
