@@ -1,0 +1,28 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/BogiHub.App/BogiHub.App.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="src/BogiHub.Core/BogiHub.Core.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="src/BogiHub.Devices.Sdl/BogiHub.Devices.Sdl.csproj" />
+    <Project Path="src/BogiHub.Output/BogiHub.Output.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="src/BogiHub.Platform.Windows/BogiHub.Platform.Windows.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="src/BogiHub.Runtime/BogiHub.Runtime.csproj">
+      <Platform Project="x64" />
+    </Project>
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/BogiHub.Core.Tests/BogiHub.Core.Tests.csproj">
+      <Platform Project="x64" />
+    </Project>
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/BogiHub.Probe/BogiHub.Probe.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <!-- SDL3.dll comes from scripts/fetch-deps.ps1 and is copied next to every consuming executable. -->
+  <ItemGroup>
+    <None Include="..\..\third_party\SDL3\SDL3.dll" Link="SDL3.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Visible="false" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BogiHub.Core\BogiHub.Core.csproj" />
+  </ItemGroup>
+
+  <Target Name="CheckSdl3" BeforeTargets="Build" Condition="!Exists('$(MSBuildThisFileDirectory)..\..\third_party\SDL3\SDL3.dll')">
+    <Error Text="SDL3.dll is missing. Run: powershell -ExecutionPolicy Bypass -File scripts/fetch-deps.ps1" />
+  </Target>
+
+</Project>

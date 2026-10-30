@@ -1,0 +1,42 @@
+name: Bug report
+description: Something doesn't work as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: BogiHub version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: connection
+    attributes:
+      label: How is the controller connected?
+      options: [Wireless puck, USB-C cable, Bluetooth, Not sure]
+    validations:
+      required: true
+  - type: dropdown
+    id: steam
+    attributes:
+      label: Was Steam running?
+      options: ["Yes", "No"]
+    validations:
+      required: true
+  - type: input
+    id: game
+    attributes:
+      label: Game (if any) and launcher
+      placeholder: "Fortnite, Epic Games Launcher"
+  - type: textarea
+    id: log
+    attributes:
+      label: Log
+      description: BogiHub → Settings → Diagnostics → Export log, then drag the file here.

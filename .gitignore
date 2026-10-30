@@ -1,0 +1,17 @@
+bin/
+obj/
+.vs/
+.vscode/
+*.user
+*.suo
+TestResults/
+artifacts/
+publish/
+dist/
+
+# Native deps fetched by scripts/fetch-deps.ps1
+third_party/SDL3/
+third_party/ViGEmBus/
+
+# Local probe output
+probe-reports/

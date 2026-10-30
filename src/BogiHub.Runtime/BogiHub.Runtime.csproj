@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BogiHub.Core\BogiHub.Core.csproj" />
+    <ProjectReference Include="..\BogiHub.Devices.Sdl\BogiHub.Devices.Sdl.csproj" />
+    <ProjectReference Include="..\BogiHub.Output\BogiHub.Output.csproj" />
+    <ProjectReference Include="..\BogiHub.Platform.Windows\BogiHub.Platform.Windows.csproj" />
+  </ItemGroup>
+
+</Project>

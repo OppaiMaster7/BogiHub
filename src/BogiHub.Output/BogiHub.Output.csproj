@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Nefarius.ViGEm.Client" Version="1.21.256" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BogiHub.Core\BogiHub.Core.csproj" />
+  </ItemGroup>
+
+</Project>

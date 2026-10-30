@@ -1,0 +1,286 @@
+﻿<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="BogiHub.App.App"
+             RequestedThemeVariant="Dark">
+
+  <Application.Resources>
+    <!-- Glass edge: bright where light hits the top, fading towards the bottom. -->
+    <LinearGradientBrush x:Key="GlassEdge" StartPoint="0%,0%" EndPoint="0%,100%">
+      <GradientStop Color="#5AFFFFFF" Offset="0" />
+      <GradientStop Color="#14FFFFFF" Offset="0.6" />
+      <GradientStop Color="#22FFFFFF" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="GlassEdgeHover" StartPoint="0%,0%" EndPoint="0%,100%">
+      <GradientStop Color="#90FFFFFF" Offset="0" />
+      <GradientStop Color="#22FFFFFF" Offset="0.6" />
+      <GradientStop Color="#33FFFFFF" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="GlassFill" StartPoint="0%,0%" EndPoint="0%,100%">
+      <GradientStop Color="#1FFFFFFF" Offset="0" />
+      <GradientStop Color="#0AFFFFFF" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="GlassFillHover" StartPoint="0%,0%" EndPoint="0%,100%">
+      <GradientStop Color="#2EFFFFFF" Offset="0" />
+      <GradientStop Color="#12FFFFFF" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="PrimaryFill" StartPoint="0%,0%" EndPoint="0%,100%">
+      <GradientStop Color="#FFFFFFFF" Offset="0" />
+      <GradientStop Color="#FFD9DEE5" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="MenuGlass" StartPoint="0%,0%" EndPoint="0%,100%">
+      <GradientStop Color="#F620242C" Offset="0" />
+      <GradientStop Color="#F6121519" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="#F2171A20" />
+    <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="#30FFFFFF" />
+  </Application.Resources>
+
+  <Application.Styles>
+    <FluentTheme>
+      <FluentTheme.Palettes>
+        <ColorPaletteResources x:Key="Dark"
+                               Accent="#EEF1F5"
+                               AltHigh="#0A0C0F"
+                               RegionColor="#0A0C0F"
+                               ChromeMediumLow="#111419"
+                               ChromeMedium="#161A20"
+                               ChromeHigh="#2F3641"
+                               BaseHigh="#E9ECF1"
+                               BaseMediumHigh="#C9CED6"
+                               BaseMedium="#8B94A3"
+                               BaseLow="#232932" />
+      </FluentTheme.Palettes>
+    </FluentTheme>
+
+    <!-- Typography -->
+    <Style Selector="TextBlock">
+      <Setter Property="Foreground" Value="#E9ECF1" />
+    </Style>
+    <Style Selector="TextBlock.h1">
+      <Setter Property="FontSize" Value="28" />
+      <Setter Property="FontWeight" Value="Bold" />
+      <Setter Property="LetterSpacing" Value="-0.6" />
+    </Style>
+    <Style Selector="TextBlock.h2">
+      <Setter Property="FontSize" Value="15.5" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="LetterSpacing" Value="-0.1" />
+    </Style>
+    <Style Selector="TextBlock.eyebrow">
+      <Setter Property="FontSize" Value="11" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="LetterSpacing" Value="1.3" />
+      <Setter Property="Foreground" Value="#7E8796" />
+    </Style>
+    <Style Selector="TextBlock.muted">
+      <Setter Property="Foreground" Value="#9AA3B1" />
+      <Setter Property="FontSize" Value="12.5" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style Selector="TextBlock.mono">
+      <Setter Property="FontFamily" Value="Cascadia Mono, Consolas, monospace" />
+      <Setter Property="FontSize" Value="12" />
+    </Style>
+
+    <!-- Buttons: glass capsules. One solid white primary per view. -->
+    <Style Selector="Button">
+      <Setter Property="CornerRadius" Value="99" />
+      <Setter Property="Padding" Value="16,8" />
+      <Setter Property="FontSize" Value="13" />
+      <Setter Property="Background" Value="{StaticResource GlassFill}" />
+      <Setter Property="BorderBrush" Value="{StaticResource GlassEdge}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="Foreground" Value="#E9ECF1" />
+      <Setter Property="Cursor" Value="Hand" />
+      <Setter Property="RenderTransform" Value="scale(1)" />
+      <Setter Property="Transitions">
+        <Transitions>
+          <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.28" Easing="BackEaseOut" />
+        </Transitions>
+      </Setter>
+    </Style>
+    <Style Selector="Button /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Transitions">
+        <Transitions>
+          <BrushTransition Property="Background" Duration="0:0:0.18" />
+          <BrushTransition Property="BorderBrush" Duration="0:0:0.18" />
+        </Transitions>
+      </Setter>
+    </Style>
+    <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource GlassFillHover}" />
+      <Setter Property="BorderBrush" Value="{StaticResource GlassEdgeHover}" />
+      <Setter Property="Foreground" Value="#FFFFFF" />
+    </Style>
+    <Style Selector="Button:pressed">
+      <Setter Property="RenderTransform" Value="scale(0.95)" />
+    </Style>
+    <Style Selector="Button.primary">
+      <Setter Property="Background" Value="{StaticResource PrimaryFill}" />
+      <Setter Property="BorderBrush" Value="#FFFFFFFF" />
+      <Setter Property="Foreground" Value="#0A0C0F" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector="Button.primary:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#FFFFFFFF" />
+      <Setter Property="BorderBrush" Value="#FFFFFFFF" />
+      <Setter Property="Foreground" Value="#0A0C0F" />
+    </Style>
+    <Style Selector="Button.ghost">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+      <Setter Property="Foreground" Value="#A6AEBB" />
+    </Style>
+    <Style Selector="Button.danger">
+      <Setter Property="Background" Value="#2AFF6B6B" />
+      <Setter Property="BorderBrush" Value="#55FF8A8A" />
+      <Setter Property="Foreground" Value="#FF9C9C" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector="Button.danger:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#40FF6B6B" />
+      <Setter Property="BorderBrush" Value="#88FF9C9C" />
+      <Setter Property="Foreground" Value="#FFC2C2" />
+    </Style>
+
+    <!-- Plain text buttons living on top of a liquid lens (segmented switch, navigation) -->
+    <Style Selector="Button.bare, Button.nav">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style Selector="Button.bare:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+    </Style>
+    <Style Selector="Button.nav">
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Left" />
+      <Setter Property="Padding" Value="14,11" />
+      <Setter Property="CornerRadius" Value="14" />
+      <Setter Property="Foreground" Value="#9AA3B1" />
+    </Style>
+    <Style Selector="Button.nav:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#0AFFFFFF" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+      <Setter Property="Foreground" Value="#E9ECF1" />
+    </Style>
+    <Style Selector="Button.nav.selected">
+      <Setter Property="Foreground" Value="#FFFFFF" />
+    </Style>
+
+    <!-- Window caption buttons (own glass chrome) -->
+    <Style Selector="Button.caption, Button.caption-close">
+      <Setter Property="Background" Value="#10FFFFFF" />
+      <Setter Property="BorderBrush" Value="#22FFFFFF" />
+      <Setter Property="CornerRadius" Value="99" />
+    </Style>
+    <Style Selector="Button.caption-close:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#CCE5484D" />
+      <Setter Property="BorderBrush" Value="#FFFF8A8A" />
+    </Style>
+
+    <!-- Inputs: frosted wells -->
+    <Style Selector="ComboBox">
+      <Setter Property="CornerRadius" Value="12" />
+      <Setter Property="MinWidth" Value="150" />
+      <Setter Property="Background" Value="#12FFFFFF" />
+      <Setter Property="BorderBrush" Value="{StaticResource GlassEdge}" />
+    </Style>
+    <Style Selector="ComboBox:pointerover /template/ Border#Background">
+      <Setter Property="Background" Value="#1CFFFFFF" />
+      <Setter Property="BorderBrush" Value="{StaticResource GlassEdgeHover}" />
+    </Style>
+    <Style Selector="ComboBox /template/ Border#Background">
+      <Setter Property="Transitions">
+        <Transitions>
+          <BrushTransition Property="Background" Duration="0:0:0.18" />
+        </Transitions>
+      </Setter>
+    </Style>
+    <!-- Chevron turns over while the menu is open. -->
+    <Style Selector="ComboBox /template/ PathIcon#DropDownGlyph">
+      <Setter Property="RenderTransform" Value="rotate(0deg)" />
+      <Setter Property="Transitions">
+        <Transitions>
+          <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3" Easing="0.22,1,0.36,1" />
+        </Transitions>
+      </Setter>
+    </Style>
+    <Style Selector="ComboBox:dropdownopen /template/ PathIcon#DropDownGlyph">
+      <Setter Property="RenderTransform" Value="rotate(180deg)" />
+    </Style>
+    <!-- The menu: frosted dark glass that drops in and settles. -->
+    <Style Selector="ComboBox /template/ Border#PopupBorder">
+      <Setter Property="Background" Value="{StaticResource MenuGlass}" />
+      <Setter Property="BorderBrush" Value="{StaticResource GlassEdge}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="16" />
+      <Setter Property="Padding" Value="6" />
+      <Setter Property="Margin" Value="0,6,0,0" />
+    </Style>
+    <!-- Keyframes may only use properties Avalonia can interpolate natively (no RenderTransform here). -->
+    <Style Selector="ComboBox:dropdownopen /template/ Border#PopupBorder">
+      <Style.Animations>
+        <Animation Duration="0:0:0.26" Easing="0.22,1,0.36,1" FillMode="Forward">
+          <KeyFrame Cue="0%">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+          </KeyFrame>
+          <KeyFrame Cue="100%">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="Margin" Value="0,6,0,0" />
+          </KeyFrame>
+        </Animation>
+      </Style.Animations>
+    </Style>
+    <Style Selector="ComboBoxItem">
+      <Setter Property="CornerRadius" Value="10" />
+      <Setter Property="Padding" Value="12,8" />
+      <Setter Property="Margin" Value="0,1" />
+    </Style>
+    <Style Selector="ComboBoxItem /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Transitions">
+        <Transitions>
+          <BrushTransition Property="Background" Duration="0:0:0.15" />
+        </Transitions>
+      </Setter>
+    </Style>
+    <Style Selector="ComboBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#16FFFFFF" />
+      <Setter Property="Foreground" Value="#FFFFFF" />
+    </Style>
+    <Style Selector="ComboBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#24FFFFFF" />
+      <Setter Property="Foreground" Value="#FFFFFF" />
+    </Style>
+    <Style Selector="ComboBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#30FFFFFF" />
+    </Style>
+    <Style Selector="ComboBoxItem:pressed /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#38FFFFFF" />
+    </Style>
+    <Style Selector="TextBox">
+      <Setter Property="CornerRadius" Value="12" />
+      <Setter Property="Background" Value="#10FFFFFF" />
+      <Setter Property="BorderBrush" Value="#26FFFFFF" />
+    </Style>
+    <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
+      <Setter Property="Background" Value="#16FFFFFF" />
+      <Setter Property="BorderBrush" Value="#40FFFFFF" />
+    </Style>
+    <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+      <Setter Property="Background" Value="#1AFFFFFF" />
+      <Setter Property="BorderBrush" Value="#88FFFFFF" />
+    </Style>
+    <Style Selector="ToolTip">
+      <Setter Property="Background" Value="#F01B1F26" />
+      <Setter Property="BorderBrush" Value="#30FFFFFF" />
+      <Setter Property="Foreground" Value="#E9ECF1" />
+      <Setter Property="CornerRadius" Value="12" />
+    </Style>
+    <Style Selector="ScrollViewer">
+      <Setter Property="AllowAutoHide" Value="True" />
+    </Style>
+  </Application.Styles>
+</Application>
